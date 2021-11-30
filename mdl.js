@@ -1,5 +1,6 @@
 let express = require("express");
 let app = express();
+let fortune = require("./lib/fortune");
 
 // 設定handlebars view 引擎
 let handlebars = require("express3-handlebars").create({
@@ -10,19 +11,12 @@ app.set("view engine", "handlebars");
 
 app.set("port", process.env.PORT || 3000);
 
-let fortunes = [
-  "The love of your life is right in front of your eyes.",
-  "Behind this fortune is the love of my life.",
-  "You have a secret admirer.",
-  "Love, because it is the only true adventure.",
-];
-
 app.get("/", (req, res, next) => {
   res.render("home");
 });
 
 app.get("/about", (req, res, next) => {
-  let randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+  let randomFortune = fortune.getFortune();
   res.render("about", { fortune: randomFortune });
 });
 
