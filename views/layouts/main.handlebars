@@ -1,14 +1,19 @@
 <html>
   <head>
     <title>Meadowlark Travel</title>
+    {{{_sections.head}}}
     {{#if showTests}}
       <link rel="stylesheet" href="/vendor/mocha.css" />
     {{/if}}
-    <script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+
   </head>
   <body>
     <header><img src="img/mdlLogo.png" alt="logo" /></header>
     {{{body}}}
+    <script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+    {{{_sections.jquery}}}
+
+    {{! 這是極機密的註解，不會傳到瀏覽器端 }}
     {{#if showTests}}
       <div id="mocha"></div>
       <script src="/vendor/mocha.js"></script>
