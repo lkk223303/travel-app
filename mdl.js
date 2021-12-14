@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var fortune = require("./lib/fortune");
+var formidable = require("formidable");
 
 // 設定handlebars view 引擎
 var handlebars = require("express3-handlebars").create({
@@ -99,8 +100,48 @@ app.get("/data/nursery-rhyme", function (req, res) {
   });
 });
 
+app.get("/newsletter", function (req, res) {
+  // 我們之後會學習ＣＳＲＦ，現在只提供一個虛擬值
+  res.render("newsletter", { csrf: "CSRF token goes here" });
+});
+
 app.post("/process", function (req, res) {
-  console.log(req.body);
+  // console.log("Form (from querystring): " + req.query.form);
+  // console.log("CSRF token (from hidden form field): " + req.body._csrf);
+  // console.log("Name (from visible form field): " + req.body.name);
+  // console.log("Email (from visible form field): " + req.body.email);
+
+  if (req.xhr || req.accepts("json,html") === "json") {
+    // 如果有錯誤的話，我們會傳送 {error:'error description'}
+    res.send({ success: true });
+  } else {
+    // 如果有錯誤的話，會重新導向至一個錯誤網頁
+    res.redirect(303, "/thank-you");
+  }
+});
+
+app.get("/contest/vacation-photo", function (req, res) {
+  var now = new Date();
+  res.render("contest/vacation-photo", {
+    year: now.getFullYear(),
+    month: now.getMonth(),
+  });
+});
+
+app.post("/contest/vacation-photo/:year/:month", function (req, res) {
+  var form = new formidable.IncomingForm();
+  form.parse(req, function (err, fields, files) {
+    if (err) return res.redirect(303, "/error");
+    // 可以看到前端打過來帶的參數
+    console.log(req.params);
+    // 接收到的表單資訊
+    console.log("received fields: ");
+    console.log(fields);
+    // 接收到的檔案資訊
+    console.log("received files: ");
+    console.log(files);
+    res.redirect(303, "/thank-you");
+  });
 });
 
 //請求標頭 請求物件的headers特性，內含瀏覽器傳送的資訊
